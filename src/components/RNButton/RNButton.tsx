@@ -4,11 +4,12 @@ import React, { ReactNode } from 'react'
 interface IRNButtonProps {
     children?: ReactNode;
     [x:string]: any;
+    activeOpacity?: number
 }
 
-const RNButton: React.FC<IRNButtonProps> = ({children,...props}) => {
+const RNButton: React.FC<IRNButtonProps> = ({children,activeOpacity,...props}) => {
   return (
-    <TouchableOpacity {...props}>
+    <TouchableOpacity {...props} activeOpacity={activeOpacity}>
       {children}
     </TouchableOpacity>
   )

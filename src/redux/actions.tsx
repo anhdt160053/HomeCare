@@ -32,6 +32,15 @@ export const Login = (username: string, password: string) => {
   }
 }
 
+export const ConfirmPassWord = (password: string) => {
+  return async (dispatch: Dispatch) => {
+    let token = null;
+    token = 'tuananhdz'+ password;
+    await AsyncStorage.setItem('token',token)
+    Logout()
+  }
+}
+
 
 
 export const Logout = () => {

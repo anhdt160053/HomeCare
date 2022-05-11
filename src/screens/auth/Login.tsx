@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, View, StatusBar, Platform, UIManager, LayoutAnimation, ActivityIndicator } from 'react-native'
+import { Image, SafeAreaView, ScrollView, StyleSheet, Text, View, StatusBar, Platform, UIManager, LayoutAnimation, EventEmitter, DeviceEventEmitter } from 'react-native'
 import React, { createRef, useCallback, useEffect, useState } from 'react'
 import { RNButton } from '../../components/RNButton'
 import { Color, Constants } from '../../common';
@@ -52,14 +52,27 @@ const LoginScreen: React.FC = () => {
     });
   }
 
-  const handleOnLogin =   () => {
-    console.log('handleOnLogin');
+  const validate = () => {
+    if(!name) {
+      setErrorUsername(true)
+      if(!password) {
+        setErrorPassword(true)
+      }
+      return false;
+    }
     if(!password) {
       setErrorPassword(true)
-      return;
+      if(!name) {
+        setErrorUsername(true)
+      }
+      return false;
     }
-    if(!name){
-      setErrorUsername(true)
+    return true;
+  }
+
+  const handleOnLogin =  () => {
+    console.log('handleOnLogin');
+    if(!validate()){
       return;
     }
     setTimeout(() => {
