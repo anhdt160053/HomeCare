@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, ViewStyle } from 'react-native'
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { TextInput } from 'react-native-gesture-handler'
 import { Color } from '../../common'
 
@@ -10,12 +10,15 @@ interface IRNInputProps {
     placeholder?: string
     secureTextEntry?: boolean
     value?: string;
-    onChangeText?: () => void;
-    error?: boolean;
+    onChangeText?: (text: string) => void;
     errorMessage?: string;
+    validate?: boolean ;
+    error?: boolean ;
+    emptyMessage?: string;
 }
 
-const RNInput: React.FC<IRNInputProps> = ({children,wrapStyleInput,placeholder,secureTextEntry,value,onChangeText,style,error,errorMessage,...rest}) => {
+const RNInput: React.FC<IRNInputProps> = ({children,wrapStyleInput,placeholder,secureTextEntry,value,onChangeText,style,errorMessage,emptyMessage,error,validate,...rest}) => {
+  console.log('RNInput');
   return (
     <View 
         style={wrapStyleInput}
@@ -29,7 +32,7 @@ const RNInput: React.FC<IRNInputProps> = ({children,wrapStyleInput,placeholder,s
         onChangeText={onChangeText}
         style={style}
       />
-      {error && <Text style={styles.textError}>{errorMessage}</Text>}
+      {error && <Text style={styles.textError}>{errorMessage ? errorMessage : emptyMessage}</Text>}
     </View>
   )
 }
@@ -40,6 +43,7 @@ const styles = StyleSheet.create({
     textError:{
         fontSize:16,
         fontWeight:'600',
-        color: Color.primary
+        color: Color.primary,
+        marginTop: 5
     }
 })

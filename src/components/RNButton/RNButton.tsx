@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { ReactNode } from 'react'
+import React, { memo, ReactNode } from 'react'
 
 interface IRNButtonProps {
     children?: ReactNode;
@@ -8,6 +8,8 @@ interface IRNButtonProps {
 }
 
 const RNButton: React.FC<IRNButtonProps> = ({children,activeOpacity,...props}) => {
+  console.log('RNButton');
+  
   return (
     <TouchableOpacity {...props} activeOpacity={activeOpacity}>
       {children}
@@ -15,4 +17,4 @@ const RNButton: React.FC<IRNButtonProps> = ({children,activeOpacity,...props}) =
   )
 }
 
-export default RNButton
+export default memo(RNButton)

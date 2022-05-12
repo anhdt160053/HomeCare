@@ -1,52 +1,100 @@
-import { StyleSheet, Text, View, TextInput, SafeAreaView } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, TextInput, SafeAreaView, Keyboard } from 'react-native'
+import React, { useCallback, useState } from 'react'
 import { Color, Constants } from '../../common'
 import { RNInput } from '../../components/RNInput'
 import { KeyboardScrollView } from '../../components/Keyboard'
 import { RNButton } from '../../components/RNButton'
 import { useDispatch } from 'react-redux'
+import { Languages } from '../../common/Languages'
 
 const Account = () => {
+  console.log('Account');
+  
   
   const dispatch = useDispatch();
+  const [validateOldPW,setValidateOldPW] = useState(true);
+  const [validateNewPW,setValidateNewPW] = useState(true);
+  const [validateReNewPW,setValidateReNewPW] = useState(true);
+  const [error,setError] = useState(false);
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassWord] = useState('');
+  const [reNewPassword,setReNewPassword] = useState('');
 
-  const validate = () => {
 
+  const handleOnChangeOldPassword = (text: string) => {
+    setOldPassword(text);
+    if(!oldPassword) {;
+      setValidateOldPW(false)
+    }else{
+      setValidateOldPW(true)
+    }
+    
+  }
+
+  const handleOnchangeNewPassword = (text: string) => {
+    setNewPassWord(text);
+    if(!newPassword) {
+      setValidateNewPW(false)
+    }else{
+      setValidateNewPW(true)
+    }
+  }
+
+  const handleOnChangeRePassword = (text: string) => {
+    setReNewPassword(text);
+    if(!reNewPassword){
+      setValidateReNewPW(false)
+    }else{
+      setValidateReNewPW(true)
+    }
   }
 
   const handleOnConfirmPress = () => {
-
+    Keyboard.dismiss();
+    setError(true); 
   }
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardScrollView >
         <RNInput
-          placeholder='Mật khẩu cũ'
+          placeholder={'Mật khẩu cũ'}
           style={styles.input}
           wrapStyleInput={{marginTop: 20}}
           secureTextEntry
+          
+          emptyMessage={Languages.MESSAGE_EMPTY}
+          onChangeText={(text: string) => handleOnChangeOldPassword(text) }
+          error={validateOldPW && error}
         >
           <Text style={styles.title}>{'Mật khẩu cũ'}</Text>
         </RNInput>
         <RNInput
-          placeholder='Mật khẩu mới'
+          placeholder={'Mật khẩu mới'}
           style={styles.input}
           wrapStyleInput={{marginVertical: 10}}
           secureTextEntry
+          
+          emptyMessage={Languages.MESSAGE_EMPTY}
+          onChangeText={(text: string) => handleOnchangeNewPassword(text)}
+          error={validateNewPW && error}
         >
           <Text style={styles.title}>{'Mật khẩu mới'}</Text>
         </RNInput>
         <RNInput
-          placeholder='Nhập lại mật khẩu'
+          placeholder={'Nhập lại mật khẩu'}
           style={styles.input}
           secureTextEntry
+          
+          emptyMessage={Languages.MESSAGE_EMPTY}
+          onChangeText={(text: string) => handleOnChangeRePassword(text)}
+          error={validateReNewPW && error}
         >
           <Text style={styles.title}>{'Nhập lại mật khẩu'}</Text>
         </RNInput>
         <RNButton activeOpacity={0.8}>
           <Text style={styles.textButton} onPress={handleOnConfirmPress}>{'Xác nhận'}</Text>
         </RNButton>
-        </KeyboardScrollView>
+      </KeyboardScrollView>
       </SafeAreaView>
   )
 }
