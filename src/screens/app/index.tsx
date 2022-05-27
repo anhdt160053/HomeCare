@@ -14,13 +14,16 @@ import AssignmentReport from './AssignmentReport';
 import SaleReport from './SaleReport';
 import Notification  from './Notification';
 import  Account  from './Account';
+import Chat from './Chat';
 import FastImage from 'react-native-fast-image';
 // import ImagePicker from 'react-native-image-crop-picker';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Color } from '../../common';
+import { Color, Constants } from '../../common';
 import { Logout } from '../../redux/actions';
 import { useDispatch } from 'react-redux';
+import MyTabs from '../../components/RNBottomBar';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 // import RNFetchBlob from 'rn-fetch-blob';
 // import ImgToBase64 from 'react-native-image-base64';
 // import ImageResizer from 'react-native-image-resizer';
@@ -30,11 +33,11 @@ LogBox.ignoreLogs([
   "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
 ]);
 
-const Stack = createNativeStackNavigator();
+const Tab = createMaterialBottomTabNavigator();
 const Drawer = createDrawerNavigator();
-const dispatch = useDispatch();
 
 const CustomComponent = (props: any)=> {
+  const dispatch = useDispatch();
 //   const modalizeRef = useRef<Modalize>(null);
 
   // useEffect(() => {
@@ -74,6 +77,7 @@ const CustomComponent = (props: any)=> {
 
   const handleOnLogoutPress = () => {
       console.log('handleOnLogoutPress');
+
       
     dispatch(Logout())
   }
@@ -120,43 +124,48 @@ export default function AppDrawer() {
     <SafeAreaProvider>
         <StatusBar backgroundColor={Color.strongBlue}/>
         <NavigationContainer independent={true} >
-            <Drawer.Navigator initialRouteName='Dashboard' drawerContent={(props) => <CustomComponent {...props} />} screenOptions={{headerStyle: {
-          backgroundColor: '#fff',
-        },}}>
-                <Drawer.Screen
-                    name="Dashboard"
-                    options={{ drawerLabel: 'Darhboard', headerStyle:{backgroundColor: Color.lightBlue}, headerTintColor: Color.white}}
-                    component={Dashboard}
-                    
-                />
-                <Drawer.Screen
-                    name="Lịch làm việc"
-                    options={{ drawerLabel: 'Lịch làm việc', headerStyle:{backgroundColor: Color.lightBlue}, headerTintColor: Color.white }}
-                    component={Calendar} />
-                <Drawer.Screen
-                    name="Buổi trải nghiệm"
-                    options={{ drawerLabel: 'Buổi trải nghiệm', headerStyle:{backgroundColor: Color.lightBlue}, headerTintColor: Color.white }}
-                    component={ExperienceSession} />
-                <Drawer.Screen
-                    name="Hợp đồng"
-                    options={{ drawerLabel: 'Hợp đồng', headerStyle:{backgroundColor: Color.lightBlue}, headerTintColor: Color.white }}
-                    component={Contract} />
-                <Drawer.Screen
-                    name="Báo cáo phân công ca"
-                    options={{ drawerLabel: 'Báo cáo phân công ca', headerStyle:{backgroundColor: Color.lightBlue}, headerTintColor: Color.white }}
-                    component={AssignmentReport} />
-                <Drawer.Screen
-                    name="Báo cáo doang thu"
-                    options={{ drawerLabel: 'Báo cáo doang thu', headerStyle:{backgroundColor: Color.lightBlue}, headerTintColor: Color.white }}
-                    component={SaleReport} />
-                <Drawer.Screen
-                    name="Thông báo"
-                    options={{ drawerLabel: 'Thông báo', headerStyle:{backgroundColor: Color.lightBlue}, headerTintColor: Color.white }}
-                    component={Notification} />
-                <Drawer.Screen
-                    name="Đổi mật khẩu"
-                    options={{ drawerLabel: 'Đổi mật khẩu', headerStyle:{backgroundColor: Color.lightBlue}, headerTintColor: Color.white }}
-                    component={Account} />
+            <Drawer.Navigator 
+              initialRouteName='Dashboard' 
+              drawerContent={(props) => <CustomComponent {...props} />} 
+              screenOptions={{headerStyle: {backgroundColor: '#fff'}}}
+            >
+              <Drawer.Screen
+                  name="Dashboard"
+                  options={{ drawerLabel: 'Darhboard', headerStyle:{backgroundColor: Color.lightBlue}, headerTintColor: Color.white, headerTitleStyle:{marginLeft: Constants.WIDTH/5} }}
+                  component={Dashboard}
+              />
+              <Drawer.Screen
+                  name="Lịch làm việc"
+                  options={{ drawerLabel: 'Lịch làm việc', headerStyle:{backgroundColor: Color.lightBlue}, headerTintColor: Color.white, headerTitleStyle:{marginLeft: Constants.WIDTH/5} }}
+                  component={Calendar} />
+              <Drawer.Screen
+                  name="Buổi trải nghiệm"
+                  options={{ drawerLabel: 'Buổi trải nghiệm', headerStyle:{backgroundColor: Color.lightBlue}, headerTintColor: Color.white, headerTitleStyle:{marginLeft: Constants.WIDTH/5}  }}
+                  component={ExperienceSession} />
+              <Drawer.Screen
+                  name="Hợp đồng"
+                  options={{ drawerLabel: 'Hợp đồng', headerStyle:{backgroundColor: Color.lightBlue}, headerTintColor: Color.white, headerTitleStyle:{marginLeft: Constants.WIDTH/5}  }}
+                  component={Contract} />
+              <Drawer.Screen
+                  name="Báo cáo phân công ca"
+                  options={{ drawerLabel: 'Báo cáo phân công ca', headerStyle:{backgroundColor: Color.lightBlue}, headerTintColor: Color.white, headerTitleStyle:{marginLeft: Constants.WIDTH/5}  }}
+                  component={AssignmentReport} />
+              <Drawer.Screen
+                  name="Báo cáo doang thu"
+                  options={{ drawerLabel: 'Báo cáo doang thu', headerStyle:{backgroundColor: Color.lightBlue}, headerTintColor: Color.white, headerTitleStyle:{marginLeft: Constants.WIDTH/5}  }}
+                  component={SaleReport} />
+              <Drawer.Screen
+                  name="Chat"
+                  options={{ drawerLabel: 'Chăm sóc khách hàng', headerStyle:{backgroundColor: Color.lightBlue}, headerTintColor: Color.white, headerTitleStyle:{marginLeft: Constants.WIDTH/5}  }}
+                  component={Chat} />
+              <Drawer.Screen
+                  name="Thông báo"
+                  options={{ drawerLabel: 'Thông báo', headerStyle:{backgroundColor: Color.lightBlue}, headerTintColor: Color.white, headerTitleStyle:{marginLeft: Constants.WIDTH/5}  }}
+                  component={Notification} />
+              <Drawer.Screen
+                  name="Đổi mật khẩu"
+                  options={{ drawerLabel: 'Đổi mật khẩu', headerStyle:{backgroundColor: Color.lightBlue}, headerTintColor: Color.white, headerTitleStyle:{marginLeft: Constants.WIDTH/5}  }}
+                  component={Account} />
             </Drawer.Navigator>
         </NavigationContainer>
     </SafeAreaProvider>

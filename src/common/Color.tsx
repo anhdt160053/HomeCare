@@ -8,5 +8,6 @@ export default {
     gray: '#666',
     darkGray: '#999',
     lightBlue: '#5c6bf7',
-    strongBlue: '#1b2fe3'
+    strongBlue: '#1b2fe3',
+    background:'#fff'
 }

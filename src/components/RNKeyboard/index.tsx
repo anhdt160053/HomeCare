@@ -1,12 +1,12 @@
 import React, { ReactNode } from 'react'
-import { Platform } from 'react-native';
+import { Platform, StyleProp, ViewStyle } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 interface IKeyBoardScrollView {
-    children : ReactNode,
-    contentContainerStyle?: Object,
-    extraScrollHeight?: any,
-    style?: Object
+    children : ReactNode;
+    contentContainerStyle?: StyleProp<ViewStyle>;
+    extraScrollHeight?: any;
+    style?: StyleProp<ViewStyle>;
 }
 
 const KeyboardScrollView: React.FC<IKeyBoardScrollView> = ({children, contentContainerStyle, extraScrollHeight, style}) => {

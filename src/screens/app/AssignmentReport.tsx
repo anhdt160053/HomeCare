@@ -77,7 +77,7 @@ const AssignmentReport = () => {
     return (
       <View style={{ marginTop: 10, marginHorizontal: 10}}>
         <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 16, lineHeight: 16, alignSelf:'center', fontWeight : '800'}}>{'Ngày'}</Text>
+            <Text style={{fontSize: 16, lineHeight: 16, alignSelf:'center', fontWeight : '800',color: Color.gray}}>{'Ngày'}</Text>
             <View style={{marginHorizontal:10}}>
                 <TouchableWithoutFeedback  onPress={handleOnStartDatePress}>
                     <Text style={styles.text}>{outputRange ? outputRange : startDate}</Text>

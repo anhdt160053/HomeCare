@@ -1,12 +1,14 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { Image, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { getDataUseFetch } from '../../libs/FetchApi';
 import FastImage, {} from 'react-native-fast-image'
 import { Color, Constants } from '../../common';
 import { Flow } from 'react-native-animated-spinkit';
+import {RNFlatList} from '../../components';
 
-interface IResponse {
+
+interface IUserInfo {
   id: number,
   email: string;
   first_name: string;
@@ -14,46 +16,47 @@ interface IResponse {
   avatar: string;
 }
 
-const wait = (timeout: number) => {
-  return new Promise(resolve => setTimeout(resolve, timeout));
-}
+// const wait = (timeout: number) => {
+//   return new Promise(resolve => setTimeout(resolve, timeout));
+// }
+
 
 const Dashboard = () => {
-  const [refreshing, setRefreshing] = useState(false);
   const [listUser, setListUser] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  let perPage:number = 6;
-  console.log('height=',Constants.HEIGHT);
-  
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    if(listUser.length ){
-      perPage += 1;
-      let url = `https://reqres.in/api/users?per_page=${perPage}`;
-      console.log('url--',url);
-      getDataUseFetch(url)
-      .then(res => res.json())
-      .then((resJson) => {
-        setListUser(resJson.data)
-        setIsLoading(false)
-      })
-    }
-    wait(2000).then(() => setRefreshing(false));
-  }, []);
+  const [limit, setLitmit] = useState(4);
+  let url = `https://reqres.in/api/users?per_page=${limit}`;
+ 
+  // const onRefresh = useCallback(() => {
+  //   setRefreshing(true);
+    
+  //   wait(2000).then(() => setRefreshing(false));
+  // }, []);
 
   const getUserInfo = () => {
-    let url = `https://reqres.in/api/users?per_page=${perPage}`;
     getDataUseFetch(url)
-    .then(res => res.json())
-    .then((resJson) => setListUser(resJson.data))
+    .then(response => response.json())
+    .then(responseJson => {
+      if(!responseJson) return;
+      // setLitmit(limit+2);
+      setListUser(listUser.concat(responseJson.data));
+    })
   }
 
   const handleOnScroll = (event: any) => {
     console.log('contentOffsetY',event.nativeEvent.contentOffset.y);
-    if(event.nativeEvent.contentOffset.y) {
-      setIsLoading(true);  
-    } 
   }
+
+  const _renderItem = ({ item, index }: any) => {
+    return (
+      <View key={index.toString()} style={styles.infoContainer} >
+        <FastImage source={{uri: item.avatar}} style={styles.image}/>
+        <View style={{marginLeft: 10}}>
+          <Text style={styles.text}>{item.first_name.toUpperCase()} {item.last_name.toLocaleUpperCase()}</Text>
+          <Text style={[styles.text]}>{item.email}</Text>
+        </View>
+      </View>
+    );
+  };
 
     useEffect(() => {
       getUserInfo()
@@ -61,34 +64,8 @@ const Dashboard = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        showsVerticalScrollIndicator ={false}
-        showsHorizontalScrollIndicator={false}
-        scrollEventThrottle={16}
-        keyboardShouldPersistTaps={'handled'}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          />
-        }
-        onScroll={handleOnScroll}
-      >
-        {
-          listUser.map((user: IResponse) => {
-            return (
-              <ScrollView key={user.id} style={styles.infoContainer} contentContainerStyle={{alignItems:'center',flexDirection:'row',marginTop:20}}>
-                <FastImage source={{uri: user.avatar}} style={styles.image}/>
-                <View style={{marginLeft: 10}}>
-                  <Text style={styles.text}>{user.first_name.toUpperCase()} {user.last_name.toLocaleUpperCase()}</Text>
-                  <Text style={[styles.text]}>{user.email}</Text>
-                </View>
-              </ScrollView>
-            )
-          })
-        }
-      </ScrollView>
-      {isLoading && <Flow size={48} color={Color.gray} style={{alignSelf:'center'}}></Flow>}
+      <RNFlatList data={listUser} renderItem={_renderItem} showsVerticalScrollIndicator ={false} showsHorizontalScrollIndicator={false} onLoadMore={getUserInfo}/>
+     
     </SafeAreaView>
   );
 }
@@ -100,11 +77,13 @@ const styles = StyleSheet.create({
   },
   infoContainer:{
     width: Constants.WIDTH - 40,
-    height: Constants.HEIGHT /8,
+    height: Constants.HEIGHT /4,
     marginVertical: 10,
     backgroundColor: Color.gray,
     marginLeft:20,
-    borderRadius:10
+    borderRadius:10,
+    flexDirection:'row',
+    alignItems:'center'
   },
   image: {
     width: 50,

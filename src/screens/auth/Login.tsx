@@ -1,23 +1,21 @@
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, View, StatusBar, Platform, UIManager, LayoutAnimation, EventEmitter, DeviceEventEmitter } from 'react-native'
+import { Image, SafeAreaView, ScrollView, StyleSheet, Text, View, StatusBar, Platform, UIManager, LayoutAnimation, EventEmitter, DeviceEventEmitter, Alert } from 'react-native'
 import React, { createRef, useCallback, useEffect, useState } from 'react'
-import { RNButton } from '../../components/RNButton'
 import { Color, Constants } from '../../common';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Fumi } from 'react-native-textinput-effects';
 import {LogBox} from "react-native";
-import {KeyboardScrollView} from '../../../src/components/Keyboard';
+import {RNKeyboard,RNButton,RNText} from '../../components';
 import { useDispatch } from 'react-redux';
 import {Login} from '../../redux/actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
-
-
+import {auth, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailLink} from '../../../firebase/firebase';
+import type { CompositeNavigationProp } from '@react-navigation/native';
 
 
 LogBox.ignoreLogs([
   "exported from 'deprecated-react-native-prop-types'.",
 ])
-
 
 if (
   Platform.OS === "android" &&
@@ -26,12 +24,10 @@ if (
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-// const dispatch = useDispatch();
 
-const LoginScreen: React.FC = () => {
+const LoginScreen: React.FC = props => {
   const dispatch = useDispatch();
-
-  console.log('LoginScreen------------------------');
+  console.log('LoginScreen------------------------',props);
 
   const [name,setName] = useState('');
   const [password,setPassword] = useState('');
@@ -71,7 +67,29 @@ const LoginScreen: React.FC = () => {
   }
 
   const handleOnLogin =  () => {
-    console.log('handleOnLogin');
+    // console.log('navigate',navigation.navigate('Dashboard'));
+    
+    // console.log('auth.currentUser',auth.currentUser);
+    
+    
+    // console.log('handleOnLogin');
+
+        //tao tk voi firebase
+    // createUserWithEmailAndPassword(auth,name,password)
+    //   .then(userCredential => {
+    //     console.log('userCredential user=',userCredential.user);
+    //     const user = userCredential.user
+    //     sendEmailVerification(user)
+    //       .then(() =>console.log('verified')
+    //     )
+
+    //   })
+    //   .catch(error => {
+    //     Alert.alert(`Cannot signin, error: ${error.message} ${error.code}`)
+    //   })
+
+      
+
     if(!validate()){
       return;
     }
@@ -79,6 +97,7 @@ const LoginScreen: React.FC = () => {
       showToast()
     }, 0);
     dispatch(Login(name, password))
+
   }
 
   const handleOnChangeName = (name: string) => {
@@ -100,14 +119,19 @@ const LoginScreen: React.FC = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
     setErrorPassword(false);
   }
+
+  // useEffect(() => {
+
+  // }, [])
+  
   
 
   return (
     <SafeAreaView style={styles.loginContainer}>
-      <KeyboardScrollView style={{flex: 1}}>
-        <StatusBar hidden={true}></StatusBar>
+      <RNKeyboard style={{flex: 1}}>
+        <StatusBar hidden={false} backgroundColor={Color.white}></StatusBar>
         <View style={{alignItems: 'center'}}>
-          <Image source={require('../../../assets/image/logo.png')} style={styles.image}/>
+          <Image source={require('../../../assets/image/logo.png')} />
         </View>
         <Text style={styles.textCenter}>{'Đăng nhập'}</Text>
         <View style={styles.inputContainer}>
@@ -144,7 +168,7 @@ const LoginScreen: React.FC = () => {
           position='top'
           topOffset={50}
         />
-      </KeyboardScrollView>
+      </RNKeyboard>
     </SafeAreaView>
   )
 }
@@ -152,19 +176,16 @@ const LoginScreen: React.FC = () => {
 export default LoginScreen
 
 const styles = StyleSheet.create({
-  image: {
-    marginTop: 50,
-  },
   loginContainer: {
       flex: 1,
-      backgroundColor:'#fff'
+      backgroundColor: Color.white
   },
   textCenter: {
       fontSize: 22,
       fontWeight: '800',
       color : '#49658c',
       textTransform:'uppercase',
-      marginTop: 50,
+      marginVertical: 30,
       textAlign: 'center'
   },
   inputContainer: {
